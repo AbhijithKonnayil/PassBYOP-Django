@@ -25,7 +25,7 @@ SECRET_KEY = '69o03j_u04*#y3+(im&r-v^zg00@&$yc=lw^z7ho3bk03rz)q&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://meenakshykurup.pythonanywhere.com','127.0.0.1']
+ALLOWED_HOSTS = ['http://meenakshykurup.pythonanywhere.com','127.0.0.1','192.168.137.1','192.168.43.95']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'passHash',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -116,5 +118,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
+STATICFILES_DIRS=[
+    os.path.join(os.path.dirname(BASE_DIR),"static"),
+]
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"static_files") 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"media_img")
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
+}
