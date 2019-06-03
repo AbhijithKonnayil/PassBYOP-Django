@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from django.conf import settings
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 # Create your views here.
 from rest_framework.mixins import (
@@ -26,7 +27,9 @@ class UserView(APIView):
 		serializer = UserSerializer(
 		userlist, many=True, context={'akshay':"bharat"})
 		pass_data = serializer.data
-		print("kdjfjhghdgsjhfjsdgjfhsdjhfsdhfksdj                 ",pass_data)
+		print(" \nBR", settings.BASE_DIR, " \n");
+		print(" \nSD", settings.STATICFILES_DIRS, " \n");
+		print(" \nSR", settings.STATIC_ROOT, " \n");
 		pass_data_dict = pass_data[0]
 		return Response(pass_data_dict, status=HTTP_200_OK)
 	
