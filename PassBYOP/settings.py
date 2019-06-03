@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'passbyopdb',
         'USER': 'passbyopadmin',
         'PASSWORD': 'passbyoppassword',
-        'HOST': '35.154.159.76',
+        'HOST': 'passbyopdb.cth1pwwzig7q.ap-south-1.rds.amazonaws.com',
         'PORT': '5432',
         }
     }
