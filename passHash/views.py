@@ -57,10 +57,10 @@ class UserRetrieveView(GenericAPIView):
 					ctx={'username':request.data['username']}
 					return Response(ctx, status=status.HTTP_200_OK)
 		except ObjectDoesNotExist:
-			return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+			return Response({'username':False}, status=status.HTTP_401_UNAUTHORIZED)
 		
 		else:
-			return Response({}, status=status.HTTP_404_NOT_FOUND)
+			return Response({'username':False}, status=status.HTTP_404_NOT_FOUND)
 		
 		
 		
@@ -91,23 +91,7 @@ class UserCreateView(CreateAPIView):
 			print(headers)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 		except IntegrityError as e:
-			return Response({}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-
-		
-
-	# def perform_create(self, serializer):
-	# 	print("serializer \t",serializer.validated_data['image_url'] , "\nself \t", self)
-	# 	serializer.validated_data['passhash']= hash_function(serializer.validated_data['image_url'],
-	# 			serializer.validated_data['x0'],serializer.validated_data['y0'],
-	# 			serializer.validated_data['x1'],serializer.validated_data['y1'],
-	# 			serializer.validated_data['x2'],serializer.validated_data['y2'],
-	# 			serializer.validated_data['x3'],serializer.validated_data['y3'],			
-	# 		)
-	# 	try:
-	# 		User.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
-	# 	except IntegrityError as e:
-	# 		return Response({}, status=status.HTTP_406_NOT_ACCEPTABLE)
+			return Response({'username':False}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 
