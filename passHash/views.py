@@ -24,12 +24,12 @@ from rest_framework.renderers import (
                                         BrowsableAPIRenderer,
                                     )
 
-from .models import User
+from .models import Usertb
 from .serializers import UserSerializer
 
 class UserRetrieveView(GenericAPIView):
 	permission_classes = []
-	queryset=User.objects.all()
+	queryset=Usertb.objects.all()
 	serializer_class=UserSerializer
 	lookup_field='username'
 	lookup_url_kwarg = 'username'
@@ -38,7 +38,7 @@ class UserRetrieveView(GenericAPIView):
 		print("self : ", self)
 		print("request : ", request.data)
 		try:
-			UserObject = User.objects.get(username=request.data['username'])
+			UserObject = Usertb.objects.get(username=request.data['username'])
 			if UserObject:
 				serializer = self.get_serializer(data=request.data)
 				serializer.is_valid(raise_exception=True)
@@ -66,13 +66,13 @@ class UserRetrieveView(GenericAPIView):
 		
 	
 	def get_queryset(self):
-		user = User.objects.filter(username=self.kwargs['username'])
+		user = Usertb.objects.filter(username=self.kwargs['username'])
 		print("user in get query",user)
 		return user
 
 class UserCreateView(CreateAPIView):
 	permission_classes = []
-	queryset = User.objects.all()
+	queryset = Usertb.objects.all()
 	serializer_class = UserSerializer
 
 	def create(self, request, *args, **kwargs):
@@ -85,10 +85,10 @@ class UserCreateView(CreateAPIView):
 				serializer.validated_data['x2'],serializer.validated_data['y2'],
 				serializer.validated_data['x3'],serializer.validated_data['y3'],			
 			)
-		if User.objects.get(username=serializer.validated_data['username']):
+		if Usertb.objects.get(username=serializer.validated_data['username']):
 			return Response({'username':False}, status=status.HTTP_406_NOT_ACCEPTABLE)
 		else:
-			User.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
+			Usertb.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
 			headers = self.get_success_headers(serializer.data)
 			print(headers)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import User
+from .models import Usertb
 
 class UserSerializer(serializers.Serializer):
 	username=serializers.CharField(max_length=50)
@@ -13,5 +13,5 @@ class UserSerializer(serializers.Serializer):
 	x3=serializers.IntegerField()
 	y3=serializers.IntegerField()
 	image_url=serializers.CharField(max_length=1000)
-	
+
 
