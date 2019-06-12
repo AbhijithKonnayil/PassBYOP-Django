@@ -11,9 +11,8 @@ class User(models.Model):
 	y2=models.IntegerField()
 	x3=models.IntegerField()
 	y3=models.IntegerField()
-	image=models.ImageField()
-	image_url=models.CharField(max_length=200,null=True)
-	passhash = models.CharField(max_length=300,null=True)
+	image_url=models.CharField(max_length=1000,null=True)
+	passhash = models.CharField(max_length=1000,null=True)
 	
 	def __str__(self):
 		return self.username

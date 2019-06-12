@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include, re_path
 from rest_framework.routers import DefaultRouter
-from passHash.views import UserView
+from passHash.views import UserRetrieveView,UserCreateView
 from rest_framework import routers
 
 
@@ -30,7 +30,9 @@ from rest_framework import routers
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    re_path('endpoint',UserView.as_view(),name="user_endpoint"),
+    path('endpoint/register',UserCreateView.as_view(),name="register_user"),
+    path('endpoint/',UserRetrieveView.as_view(),name="retrieve_user"),
+    
 ]
 
 
