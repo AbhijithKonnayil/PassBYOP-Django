@@ -74,6 +74,12 @@ class UserCreateView(CreateAPIView):
 
 	def perform_create(self, serializer):
 		print("serializer \t",serializer.validated_data['image_url'] , "\nself \t", self)
+		print(	serializer.validated_data['x0'],"\t",serializer.validated_data['y0'],"\n"
+				serializer.validated_data['x1'],"\t",serializer.validated_data['y1'],"\n"
+				serializer.validated_data['x2'],"\t",serializer.validated_data['y2'],"\n"
+				serializer.validated_data['x3'],"\t",serializer.validated_data['y3'],"\n"
+					
+			)
 		serializer.validated_data['passhash']= hash_function(serializer.validated_data['image_url'],
 				serializer.validated_data['x0'],serializer.validated_data['y0'],
 				serializer.validated_data['x1'],serializer.validated_data['y1'],
@@ -93,7 +99,8 @@ def url_to_image(url):
 def hashing_algo(im,X0,X1,X2,X3,Y0,Y1,Y2,Y3):
 	xarr=[int(X0),int(X1),int(X2),int(X3)]
 	yarr=[int(Y0),int(Y1),int(Y2),int(Y3)]
-	passhash=""
+	print(xarr)
+	print(yarr)
 	for (x,y) in zip(xarr,yarr):
 			print("coordinates : ",x,"\t",y)
 			dmc = im[x-50:x+50, y-50:y+50]
