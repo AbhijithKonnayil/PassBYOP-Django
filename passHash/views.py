@@ -85,13 +85,14 @@ class UserCreateView(CreateAPIView):
 				serializer.validated_data['x2'],serializer.validated_data['y2'],
 				serializer.validated_data['x3'],serializer.validated_data['y3'],			
 			)
-		try:
+		if User.objects.get(username=serializer.validated_data['username']):
+			return Response({'username':False}, status=status.HTTP_406_NOT_ACCEPTABLE)
+		else:
 			User.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
 			headers = self.get_success_headers(serializer.data)
 			print(headers)
 			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-		except IntegrityError as e:
-			return Response({'username':False}, status=status.HTTP_406_NOT_ACCEPTABLE)
+			
 
 
 
