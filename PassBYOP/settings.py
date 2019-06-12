@@ -127,12 +127,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=[
     os.path.join(os.path.dirname(BASE_DIR),"static"),
 ]
-
-print(" \nBR", BASE_DIR, " \n");
-print(" \nSD", STATICFILES_DIRS, " \n");
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"static_files") 
 MEDIA_URL = '/media/'
-print(" \nSR", STATIC_ROOT, " \n");
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"media_img")
 
 REST_FRAMEWORK = {

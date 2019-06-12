@@ -2,14 +2,16 @@
 from rest_framework import serializers
 from .models import User
 
-class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = User
-		fields = ('username','x0','y0','x1','y1','x2','y2','x3','y3','image_url','passhash')
+class UserSerializer(serializers.Serializer):
+	username=serializers.CharField(max_length=50)
+	x0=serializers.IntegerField()
+	y0=serializers.IntegerField()
+	x1=serializers.IntegerField()
+	y1=serializers.IntegerField()
+	x2=serializers.IntegerField()
+	y2=serializers.IntegerField()
+	x3=serializers.IntegerField()
+	y3=serializers.IntegerField()
+	image_url=serializers.CharField(max_length=1000)
 	
-	def save(self):
-		username = self.validated_data['username']
-		passhash = self.validated_data['passhash']
-
-
 

@@ -4,3 +4,5 @@ db.sqlite3
 *.pem
 *.ppk
 server.txt
+*/migrations/__pycache__/
+*/__pycache__/*.pyc

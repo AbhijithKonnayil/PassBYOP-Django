@@ -3,6 +3,8 @@ import numpy as np
 import sys
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from urllib.request import Request, urlopen
 from rest_framework import status
 from django.shortcuts import render
@@ -34,28 +36,31 @@ class UserRetrieveView(GenericAPIView):
 
 	def post(self, request, *args, **kwargs):
 		print("self : ", self)
-		print("request : ", request.data['username'])
-		UserObject = User.objects.filter(username=request.data['username'])
-		if UserObject:
-			serializer = self.get_serializer(data=UserObject.values()[0])
-			serializer.is_valid(raise_exception=True)
-			x0=request.data['x0']
-			y0=request.data['y0']
-			x1=request.data['x1']
-			y1=request.data['y1']
-			x2=request.data['x2']
-			y2=request.data['y2']
-			x3=request.data['x3']
-			y3=request.data['y3']
-			image_url=request.data['image_url']
-			passhash=hash_function(image_url,x0,y0,x1,y1,x1,y2,x3,y3)
-
-			if passhash==serializer.data['passhash']:
-				return Response(serializer.data, status=status.HTTP_201_CREATED)
-			else:
-				return Response({'username':False}, status=status.HTTP_401_UNAUTHORIZED)
+		print("request : ", request.data)
+		try:
+			UserObject = User.objects.get(username=request.data['username'])
+			if UserObject:
+				serializer = self.get_serializer(data=request.data)
+				serializer.is_valid(raise_exception=True)
+				x0=request.data['x0']
+				y0=request.data['y0']
+				x1=request.data['x1']
+				y1=request.data['y1']
+				x2=request.data['x2']
+				y2=request.data['y2']
+				x3=request.data['x3']
+				y3=request.data['y3']
+				image_url=request.data['image_url']
+				passhash=hash_function(image_url,x0,y0,x1,y1,x1,y2,x3,y3)
+				print("UserObject : " ,UserObject)
+				if passhash==UserObject.passhash:
+					ctx={'username':request.data['username']}
+					return Response(ctx, status=status.HTTP_200_OK)
+		except ObjectDoesNotExist:
+			return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+		
 		else:
-			return Response({'username':False}, status=status.HTTP_404_NOT_FOUND)
+			return Response({}, status=status.HTTP_404_NOT_FOUND)
 		
 		
 		
@@ -64,30 +69,46 @@ class UserRetrieveView(GenericAPIView):
 		user = User.objects.filter(username=self.kwargs['username'])
 		print("user in get query",user)
 		return user
-	print("queryset  ",queryset)
-
 
 class UserCreateView(CreateAPIView):
 	permission_classes = []
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 
-	def perform_create(self, serializer):
-		print("serializer \t",serializer.validated_data['image_url'] , "\nself \t", self)
-
-		print(	serializer.validated_data['x0'],"\t",serializer.validated_data['y0'],"\n",
-				serializer.validated_data['x1'],"\t",serializer.validated_data['y1'],"\n",
-				serializer.validated_data['x2'],"\t",serializer.validated_data['y2'],"\n",
-				serializer.validated_data['x3'],"\t",serializer.validated_data['y3'],"\n",			
-			)
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		
 		serializer.validated_data['passhash']= hash_function(serializer.validated_data['image_url'],
 				serializer.validated_data['x0'],serializer.validated_data['y0'],
 				serializer.validated_data['x1'],serializer.validated_data['y1'],
 				serializer.validated_data['x2'],serializer.validated_data['y2'],
-				serializer.validated_data['x3'],serializer.validated_data['y3'],
-					
+				serializer.validated_data['x3'],serializer.validated_data['y3'],			
 			)
-		serializer.save()
+		try:
+			User.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
+			headers = self.get_success_headers(serializer.data)
+			print(headers)
+			return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+		except IntegrityError as e:
+			return Response({}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+		
+
+	# def perform_create(self, serializer):
+	# 	print("serializer \t",serializer.validated_data['image_url'] , "\nself \t", self)
+	# 	serializer.validated_data['passhash']= hash_function(serializer.validated_data['image_url'],
+	# 			serializer.validated_data['x0'],serializer.validated_data['y0'],
+	# 			serializer.validated_data['x1'],serializer.validated_data['y1'],
+	# 			serializer.validated_data['x2'],serializer.validated_data['y2'],
+	# 			serializer.validated_data['x3'],serializer.validated_data['y3'],			
+	# 		)
+	# 	try:
+	# 		User.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
+	# 	except IntegrityError as e:
+	# 		return Response({}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
 
 
 def url_to_image(url):
@@ -143,7 +164,6 @@ def hash_function(image_url,x0,y0,x1,y1,x2,y2,x3,y3):
 	req=Request(image_url, headers={'User-Agent': 'Mozilla/5.0'})
 	print("Downloading %s"%(req))
 	im=url_to_image(req)
-	cv2.imwrite('online_image.jpeg',im)
 	print(im.shape)
 	return hashing_algo(im,x0,y0,x1,y1,x2,y2,x3,y3)
 
