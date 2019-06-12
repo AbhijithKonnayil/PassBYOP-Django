@@ -86,7 +86,7 @@ class UserCreateView(CreateAPIView):
 				serializer.validated_data['x3'],serializer.validated_data['y3'],			
 			)
 		try:
-			Usertb.objects.get(username=serializer.validated_data['username']):
+			Usertb.objects.get(username=serializer.validated_data['username'])
 			return Response({'username':False}, status=status.HTTP_406_NOT_ACCEPTABLE)
 		except ObjectDoesNotExist:
 			Usertb.objects.create(username=serializer.validated_data['username'],passhash=serializer.validated_data['passhash'])
