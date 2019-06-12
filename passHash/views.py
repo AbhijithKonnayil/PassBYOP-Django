@@ -56,10 +56,10 @@ class UserRetrieveView(GenericAPIView):
 				if passhash==UserObject.passhash:
 					ctx={'username':request.data['username']}
 					return Response(ctx, status=status.HTTP_200_OK)
-		except ObjectDoesNotExist:
-			return Response({'username':False}, status=status.HTTP_401_UNAUTHORIZED)
+				else:
+					return Response({'username':False}, status=status.HTTP_401_UNAUTHORIZED)
 		
-		else:
+		except ObjectDoesNotExist:
 			return Response({'username':False}, status=status.HTTP_404_NOT_FOUND)
 		
 		
