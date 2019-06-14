@@ -51,7 +51,7 @@ class UserRetrieveView(GenericAPIView):
 				x3=request.data['x3']
 				y3=request.data['y3']
 				image_url=request.data['image_url']
-				passhash=hash_function(image_url,x0,y0,x1,y1,x1,y2,x3,y3)
+				passhash=hash_function(image_url,x0,y0,x1,y1,x2,y2,x3,y3)
 				print("UserObject : " ,UserObject)
 				if passhash==UserObject.passhash:
 					ctx={'username':request.data['username']}
